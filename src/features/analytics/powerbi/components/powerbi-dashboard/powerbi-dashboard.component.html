@@ -1,0 +1,62 @@
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Analytics</h2>
+        <div>
+            <div><label for="group">Workspace:</label></div>
+            <div>
+                <select id="group" (change)="onGroupSelect($event.target.value)">
+                    <option value="">-- Select Group --</option>
+                    <option *ngFor="let g of groups" [value]="g.id">{{ g.name }}</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Reports</h3>
+        <ul>
+            <li *ngFor="let r of reports">
+                <span class="clickable" (click)="onReportSelect(r)">
+                    {{ r.name | titlecase}}
+                </span>
+            </li>
+        </ul>
+
+        <h3>Dashboards</h3>
+        <ul>
+            <li *ngFor="let d of dashboards">
+                <span class="clickable" (click)="onDashboardSelect(d)">
+                    {{ d.displayName }}
+                </span>
+            </li>
+        </ul>
+
+
+    </aside>
+
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="dashboard-header">
+            <h1>Power BI Dashboard</h1>
+            <div class="header-actions">
+                <input type="text" placeholder="Search reports..." />
+                <button
+                    (click)="embedConfig && (selectedReport ? onReportSelect(selectedReport) : onDashboardSelect(selectedDashboard!))">
+                    ⟳ Refresh
+                </button>
+            </div>
+        </header>
+
+        <!-- Embed Power BI Report/Dashboard -->
+        <section class="charts">
+            <div *ngIf="isLoading">Loading...</div>
+            <div *ngIf="error" class="error">{{ error }}</div>
+            <!-- Embed Container -->
+            <div #embedContainer class="embed-container"
+                style="height: 80vh; width: 100%; border: 1px solid #ccc; margin-top: 1rem;">
+                <!-- Power BI report or dashboard will be embedded here -->
+            </div>
+        </section>
+    </main>
+</div>
