@@ -1,1 +1,52 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles and theme for app */
+
+// App-level base styles
+:root {
+    --app-bg: #f7f9fb;
+    --app-surface: #ffffff;
+    --muted: rgba(0, 0, 0, 0.6);
+}
+
+html,
+body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: var(--app-bg);
+    color: #111;
+}
+
+// ngx-datatable core + material theme + icons
+@import "~@swimlane/ngx-datatable/index.css";
+@import "~@swimlane/ngx-datatable/themes/material.css";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+
+/* Tweak ngx-datatable material look a bit */
+.ngx-datatable.material {
+    background: transparent;
+}
+
+.ngx-datatable .datatable-header {
+    background: var(--app-surface);
+}
+
+.ngx-datatable .datatable-row-center .datatable-body-cell {
+    padding: 0.5rem 0.75rem;
+}
+
+/* small responsive fix */
+@media (max-width: 640px) {
+    .ngx-datatable .datatable-header .datatable-row-center .datatable-column-title {
+        font-size: 0.9rem;
+    }
+}
+
+/* Ensure ngx-datatable body uses the CSS variable set on the host to enable native scrolling */
+.ngx-datatable .datatable-body {
+    max-height: var(--datatable-height, 600px) !important;
+    overflow-y: auto !important;
+}
+
+/* Optional: ensure the ngx-datatable host is display:block so CSS variable applies predictably */
+.ngx-datatable {
+    display: block;
+}

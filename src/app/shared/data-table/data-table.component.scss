@@ -1,0 +1,140 @@
+.data-table-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--app-surface, #fff);
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+
+  &.top {
+    border-bottom: 1px solid #e0e0e0;
+  }
+}
+
+.custom-pagination-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--app-surface, #fff);
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.6);
+  width: 100%;
+}
+
+.pagination-info {
+  flex: 1;
+}
+
+.pagination-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: auto;
+
+  button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #f5f5f5;
+      border-color: #999;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+
+  svg {
+    display: block;
+    color: rgba(0,0,0,0.7);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.rows-per-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+
+  select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+}
+
+.page-indicator {
+  padding: 0 0.5rem;
+  font-weight: 500;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+  z-index: 5;
+}
+
+.no-rows {
+  padding: 2rem 1rem;
+  color: rgba(0,0,0,0.6);
+  text-align: center;
+}
+
+.spinner {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Virtual scroll height tuning */
+.ngx-datatable .datatable-body {
+  /* Respect CSS variable set on ngx-datatable element for the body max-height */
+  max-height: var(--datatable-height, 600px);
+  overflow-y: auto !important;
+}
+
+.data-table-wrapper ngx-datatable {
+  display: block;
+}

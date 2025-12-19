@@ -1,0 +1,82 @@
+<div class="data-table-wrapper">
+  <ngx-datatable
+    class="material"
+    [style.--datatable-height]="tableHeight + 'px'"
+    [rows]="rows"
+    [rowIdentity]="rowIdentity"
+    [columns]="columns"
+    [count]="count"
+    [offset]="offset"
+    [limit]="limit"
+    [externalPaging]="externalPaging"
+    [externalSorting]="externalSorting"
+    [loadingIndicator]="loading"
+    [selectionType]="selectionType"
+    [selected]="selected"
+    [rowHeight]="rowHeight"
+    [headerHeight]="headerHeight"
+    [footerHeight]="enablePagination ? footerHeight : 0"
+    (page)="onPage($event)"
+    (sort)="onSort($event)"
+    (select)="onSelect($event)">
+
+    <!-- Define columns dynamically -->
+    <ngx-datatable-column *ngFor="let col of columns"
+      [prop]="col.prop"
+      [name]="col.name"
+      [sortable]="col.sortable"
+      [width]="col.width">
+
+      <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+        <ng-container *ngIf="col.cellTemplate; else defaultCell">
+          <ng-container *ngTemplateOutlet="col.cellTemplate; context: { $implicit: row, value: value }"></ng-container>
+        </ng-container>
+        <ng-template #defaultCell>{{ value }}</ng-template>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Custom Footer with pagination controls -->
+    <ngx-datatable-footer *ngIf="enablePagination">
+      <ng-template ngx-datatable-footer-template let-rowCount="rowCount">
+        <div class="custom-pagination-footer">
+          <div class="pagination-info">
+            <span *ngIf="count > 0">Showing {{ offset + 1 }} to {{ Math.min(offset + limit, count) }} of {{ count }}</span>
+          </div>
+
+          <div class="pagination-actions">
+            <label class="rows-per-page">
+              <span>Rows:</span>
+              <select aria-label="Rows per page" [value]="limit" (change)="onLimitChange($event)">
+                <option *ngFor="let opt of pageSizeOptions" [value]="opt">{{ opt }}</option>
+              </select>
+            </label>
+
+            <button class="icon-button" aria-label="First page" (click)="goFirstPage()" [disabled]="isFirstPage || loading">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M18 6L12 12L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button [disabled]="isFirstPage || loading" (click)="goPreviousPage()">Previous</button>
+            <span class="page-indicator">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button [disabled]="isLastPage || loading" (click)="goNextPage()">Next</button>
+            <button class="icon-button" aria-label="Last page" (click)="goLastPage()" [disabled]="isLastPage || loading">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M6 6L12 12L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner">Loading…</div>
+  </div>
+
+  <div class="no-rows" *ngIf="!loading && (!rows || rows.length === 0)">
+    No data
+  </div>
+</div>

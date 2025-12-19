@@ -1,0 +1,20 @@
+<div style="padding:1rem">
+  <h2>Data table demo</h2>
+
+  <app-data-table
+    [rows]="rows"
+    [columns]="columns"
+    [count]="allRows.length"
+    [limit]="pageLimit"
+    [offset]="pageOffset"
+    [loading]="loading"
+    [externalPaging]="true"
+    [externalSorting]="false"
+    selectionType="single"
+    (page)="onPage($event)"
+    (sort)="onSort($event)"
+    (select)="onSelect($event)">
+  </app-data-table>
+
+  <hr />
+</div>
