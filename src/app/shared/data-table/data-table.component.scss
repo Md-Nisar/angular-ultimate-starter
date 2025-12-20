@@ -5,6 +5,15 @@
   height: 100%;
 }
 
+.data-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table-wrapper.responsive ngx-datatable {
+  min-width: 100%;
+}
+
 /* Pagination Controls */
 .pagination-controls {
   display: flex;
@@ -126,6 +135,18 @@
   border-radius: 4px;
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Make cells wrap and break words for better small-screen UX */
+.ngx-datatable .datatable-row-center .datatable-body-cell,
+.ngx-datatable .datatable-header .datatable-row-center .datatable-column-title {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* Ensure header text wraps nicely */
+.ngx-datatable .datatable-header .datatable-row-center .datatable-column-title {
+  display: block;
 }
 
 /* Virtual scroll height tuning */

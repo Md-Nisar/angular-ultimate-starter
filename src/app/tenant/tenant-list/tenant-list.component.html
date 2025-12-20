@@ -1,20 +1,18 @@
-<div style="padding:1rem">
-  <h2>Data table demo</h2>
+<div class="tenant-list" style="padding:1rem">
+  <h2>Tenants</h2>
 
   <app-data-table
     [rows]="rows"
     [columns]="columns"
-    [count]="totalCount"
+    [count]="total"
     [limit]="pageLimit"
     [offset]="pageOffset"
     [loading]="loading"
     [externalPaging]="true"
     [externalSorting]="true"
-    selectionType="single"
-    (page)="onPage($event)"
     (sort)="onSort($event)"
-    (select)="onSelect($event)">
+    selectionType="single"
+    (page)="onPage($event)">
   </app-data-table>
 
-  <hr />
 </div>

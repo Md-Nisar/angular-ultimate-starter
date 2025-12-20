@@ -1,7 +1,9 @@
-<div class="data-table-wrapper">
+<div class="data-table-wrapper" [class.responsive]="responsive">
+  <div class="data-table-scroll" [class.enable-scroll]="responsive">
   <ngx-datatable
     class="material"
     [style.--datatable-height]="tableHeight + 'px'"
+    [columnMode]="columnMode"
     [rows]="rows"
     [rowIdentity]="rowIdentity"
     [columns]="columns"
@@ -71,6 +73,7 @@
       </ng-template>
     </ngx-datatable-footer>
   </ngx-datatable>
+  </div>
 
   <div class="loading-overlay" *ngIf="loading">
     <div class="spinner">Loading…</div>

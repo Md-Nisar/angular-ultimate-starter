@@ -27,6 +27,10 @@ export class DataTableComponent implements OnInit {
   @Input() selectionType: 'single' | 'multi' | 'checkbox' | undefined = undefined;
   @Input() selected: any[] = [];
   @Input() rowHeight?: number; // approx height of each row in pixels
+  /** Make table responsive on small screens. When true the wrapper allows horizontal scroll and cells can wrap. */
+  @Input() responsive = true;
+  /** Column sizing mode for ngx-datatable. Recommended: 'flex' for responsive layouts. */
+  @Input() columnMode: 'standard' | 'flex' | 'force' = 'force';
   @Input() enablePagination = true;
   @Input() tableHeight?: number; // px; used as CSS variable to constrain the table body
   @Input() headerHeight?: number;
@@ -34,7 +38,7 @@ export class DataTableComponent implements OnInit {
   @Input() configOverrides?: Partial<DataTableDefaults>;
 
   @Output() page = new EventEmitter<{ offset: number; limit: number }>();
-  @Output() sort = new EventEmitter<any>();
+  @Output() sort = new EventEmitter<{ prop: string; dir: 'asc' | 'desc' | '' } | null>();
   @Output() select = new EventEmitter<any[]>();
 
   readonly Math = Math;
@@ -74,7 +78,30 @@ export class DataTableComponent implements OnInit {
   }
 
   onSort(event: any): void {
-    this.sort.emit(event);
+    // Normalize ngx-datatable sort payloads to a simple { prop, dir } object
+    // Possible incoming shapes:
+    // - { sorts: [{ prop, dir }] }
+    // - { prop, dir }
+    // - [{ prop, dir }]
+    if (!event) {
+      this.sort.emit(null);
+      return;
+    }
+
+    let se: any = null;
+    if (Array.isArray(event?.sorts) && event.sorts.length) {
+      se = event.sorts[0];
+    } else if (event?.prop) {
+      se = { prop: event.prop, dir: event.dir ?? '' };
+    } else if (Array.isArray(event) && event.length) {
+      se = event[0];
+    }
+
+    if (se && se.prop) {
+      this.sort.emit({ prop: se.prop, dir: (se.dir as any) ?? '' });
+    } else {
+      this.sort.emit(null);
+    }
   }
 
   onSelect(event: any): void {

@@ -5,6 +5,8 @@
 export const environment = {
   production: false
 };
+// API base URL used by services (development)
+export const apiBaseUrl = 'http://localhost:9090/api';
 
 /*
  * For easier debugging in development mode, you can import the following file

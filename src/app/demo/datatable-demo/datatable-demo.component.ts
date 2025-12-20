@@ -1,21 +1,13 @@
-import { Component } from '@angular/core';
-
-interface UserRow { id: number; name: string; email: string; role?: string }
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DemoApiService, UserRow } from '../demo-api.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-datatable-demo',
     templateUrl: './datatable-demo.component.html',
     styleUrls: ['./datatable-demo.component.scss']
 })
-export class DatatableDemoComponent {
-    // full dataset — all 1000 rows
-    allRows: UserRow[] = Array.from({ length: 1000 }).map((_, i) => ({
-        id: i + 1,
-        name: `User ${i + 1}`,
-        email: `user${i + 1}@example.com`,
-        role: i % 3 === 0 ? 'Admin' : 'User'
-    }));
-
+export class DatatableDemoComponent implements OnInit, OnDestroy {
     // rows for current page only
     rows: UserRow[] = [];
 
@@ -30,15 +22,31 @@ export class DatatableDemoComponent {
     pageOffset = 0;
     pageLimit = 5; // default page size
     loading = false;
+    totalCount = 0;
 
-    constructor() {
+    private sub?: Subscription;
+
+    // default to external paging for demo
+    pagingMode: 'external' | 'internal' | 'auto' = 'external';
+
+    constructor(private api: DemoApiService) {}
+
+    ngOnInit(): void {
         this.loadPage();
     }
 
-    private loadPage() {
-        const start = this.pageOffset;
-        const end = this.pageOffset + this.pageLimit;
-        this.rows = this.allRows.slice(start, end);
+    ngOnDestroy(): void {
+        this.sub?.unsubscribe();
+    }
+
+    private loadPage(): void {
+        this.loading = true;
+        this.sub?.unsubscribe();
+        this.sub = this.api.getPage(this.pageOffset, this.pageLimit, this.currentSort).subscribe(res => {
+            this.rows = res.rows;
+            this.totalCount = res.count;
+            this.loading = false;
+        });
     }
 
     // event handlers
@@ -49,12 +57,36 @@ export class DatatableDemoComponent {
         console.log('page event', event);
     }
 
+    currentSort?: { prop: string; dir: 'asc' | 'desc' };
+
     onSort(event: any) {
-        console.log('sort event', event);
+        // ngx-datatable emits a sorts array when header sorting is used
+        // Normalize to a single sort object {prop, dir}
+        const sorts = event?.sorts || (event ? [event] : []);
+        if (Array.isArray(sorts) && sorts.length > 0) {
+            const s = sorts[0];
+            const dir = (s.dir === 'desc' || s.dir === -1) ? 'desc' : 'asc';
+            this.currentSort = { prop: s.prop, dir };
+        } else if (event?.prop && event?.dir) {
+            const dir = (event.dir === 'desc' || event.dir === -1) ? 'desc' : 'asc';
+            this.currentSort = { prop: event.prop, dir };
+        } else {
+            this.currentSort = undefined;
+        }
+        console.log('sort event', this.currentSort);
+        // reload current page with new sort applied
+        this.loadPage();
     }
 
     onSelect(selected: any[]) {
         console.log('selected rows', selected);
+    }
+
+    togglePaging(mode: 'external' | 'internal' | 'auto') {
+        this.pagingMode = mode;
+        if (this.pagingMode === 'external') {
+            this.loadPage();
+        }
     }
 
 }
